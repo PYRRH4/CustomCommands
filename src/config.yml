@@ -1,0 +1,276 @@
+#----------------------------------------------------------------------------------------------------
+# Configuration file for CustomCommands
+#----------------------------------------------------------------------------------------------------
+
+# Data management
+data:
+  # Back end (JSON, MYSQL) (default JSON)
+  # If you enable MySQL here, you should definitely enable it for PyrCore as well
+  backend: JSON
+  # Synchronization delay (in seconds) (disable with -1) (default 300)
+  # If this is enabled, the plugin will check the stored data (files/database), and if there's new/different data there, cached data will be overriden
+  sync_delay: -1
+  # MySQL identifiers (if backend is MYSQL)
+#  mysql:
+#    host: mysql.myserver.com
+#    name: mydatabase
+#    user: username
+#    pass: pwd
+
+#----------------------------------------------------------------------------------------------------
+# Configuration for your custom commands
+#----------------------------------------------------------------------------------------------------
+# Configurations details and description for a command (see the examples below to understand exactly what it does and how to use it)
+#   - (mandatory) aliases (list) : all the aliases the player can type to use your command. The first alias of the list is the one that will be used in display texts (for example, help).
+#   - (mandatory) arguments (config section) : you'll add the arguments patterns you want. If you don't want the player to be able to enter arguments, you'll add a simple arguments object with an empty pattern.
+# And that's all for the command itself. If you don't specify any arguments nobody will be able to perform the command, even with no arguments. See below for examples.
+#----------------------------------------------------------------------------------------------------
+# Configuration details and description for arguments (see the example below to understand exactly what it does and how to use it)
+#   - (mandatory) pattern (text) : the pattern for the command (see just below for explanations, 'Arguments patterns')
+#   - (mandatory) description (text) : a description of the command (display use only)
+#   - (optional) permission (text) : a permission required to use the command
+#   - (optional) worlds (list) : if you specify this, the arguments will only work in those worlds
+#   - (optional) cooldown (number) : a number of seconds that the player will have to wait to run the arguments again
+#   - (mandatory) perform (section) : a list of actions (see details below) that will be executed when the player runs the arguments
+#----------------------------------------------------------------------------------------------------
+# Arguments patterns
+# This is very important to understand, and it's easier than it looks.
+# A pattern is a text, between ''. It can be from an empty string (so the command can be performed with no arguments entered) to a complex pattern with default values.
+#
+# Every word of a pattern can be :
+#   - any word : the player will have to type the exact word (case doesn't matter though)
+#   - a number : [integer] (the player can type any integer he wants)
+#   - a decimal number : [double] (the player can type any double he wants)
+#   - a player : [player] (the player can type any player name he wants)
+#   - an online player : [player-online] (the player can type any online player name he wants)
+#   - a string : [string] (the player can type any word)
+#   - a sized string : [string:{min}:{max}] (the player can type any word within a range)
+#   - a phrase : [phrase] (can be added at the end only) (the player can type any words he wants (technically infinite but minecraft limit the commands size so most likely not more than 50 words)
+#
+# It's important to distinguish the MODEL arguments (the ones that can be filled with anything or something specific, the ones between []) and the STRING arguments (the one that the player has to enter fully)
+#
+# STRING arguments caracteristics :
+# - You can separate argument aliases with |
+#   --> example of pattern with aliases : 'teleport|tp [player]' (the command can be used by typing either 'teleport [player]' or 'tp [player]'
+# - You can NOT specify a default value with $
+# - You can NOT specify a description in help with %
+#
+# MODEL argument notes :
+# - You must specify a description with % to indicate what the argument is useful for. All _ will be replaced by spaces.
+#   --> example of correct MODEL argument : 'teleport [player]%target_player' (the command will display in help as 'teleport [target player]')
+# - You can specify a default value with $ so it'll mean that the argument is optional.
+#   Optional arguments are not required to type and if they're not typed the default value is used instead.
+#   You can NOT add required (non-optional) arguments after an optional argument.
+#   --> example of pattern with optional argument : 'give [player] stone [integer]$64' (the command can be used by typing either 'give [player] stone [integer]' or 'give [player]' (in that second case 64 will
+#       be used because the sender didn't specify that optional argument))
+#   --> Please note that this example is simplified and cannot be used as it because the descriptions of MODEL arguments are missing.
+#
+#----------------------------------------------------------------------------------------------------
+# Actions that you can use :
+#
+#  type: send message
+#  data:
+#    - target ('player', 'everyone', '{arg:[NUMBER]}')
+#    - message line 1 (placeholders : {args}, {player}, &7{receiver}, {arg:[NUMBER]}, {args:[STARTING NUMBER, included]})
+#    - message line 2 (placeholders : {args}, {player}, &7{receiver}, {arg:[NUMBER]}, {args:[STARTING NUMBER, included]})
+#    - ... etc
+#
+#  type: wait ticks
+#  data:
+#    - delay in ticks
+#
+#  type: execute commands for
+#  data:
+#    - command 1 (placeholders : {args}, {player}, {arg:[NUMBER]}, {args:[STARTING NUMBER, included]})
+#    - command 2 (placeholders : {args}, {player}, {arg:[NUMBER]}, {args:[STARTING NUMBER, included]})
+#    - ... etc
+#
+#  type: execute commands as
+#  data:
+#    - target ('player', 'everyone', '{arg:[NUMBER]}')
+#    - command 1 (placeholders : {args, {player}, {arg:[NUMBER]}, {args:[STARTING NUMBER, included]})
+#    - command 2 (placeholders : {args, {player}, {arg:[NUMBER]}, {args:[STARTING NUMBER, included]})
+#    - ... etc
+#
+#  type: send title
+#  data:
+#    - target ('player', 'everyone', '{arg:[NUMBER]}')
+#    - title (placeholders : {args, {player}, &7{receiver}, {arg:[NUMBER]}, {args:[STARTING NUMBER, included]})
+#    - subtitle (placeholders : {args, {player}, &7{receiver}, {arg:[NUMBER]}, {args:[STARTING NUMBER, included]})
+#    - fadein in ticks
+#    - duration in ticks
+#    - fadeout in ticks
+#
+#  type: send actionbar
+#  data:
+#    - target ('player', 'everyone', '{arg:[NUMBER]}')
+#    - the action bar (placeholders : {args, {player}, &7{receiver}, {arg:[NUMBER]}, {args:[STARTING NUMBER, included])
+#
+#  type: give item
+#  data:
+#    - target ('player', 'everyone', '{arg:[NUMBER]}')
+#    - the item name (when you saved it with /ccmd saveitem [name])
+#
+#  type: teleport
+#  data:
+#    - target ('player', 'everyone', '{arg:[NUMBER]}')
+#    - the location name (when you saved it with /ccmd saveloc [name])
+#
+#  type: change gamemode
+#  data:
+#    - target ('player', 'everyone', '{arg:[NUMBER]}')
+#    - the gamemode id (0 = survival, 1 = creative, 2 = adventure, 3 = spectator (1.8+))
+#
+#  type: change tab
+#  data:
+#    - target ('player', 'everyone', '{arg:[NUMBER]}')
+#    - header
+#    - footer
+#
+#----------------------------------------------------------------------------------------------------
+
+commands:
+  #----------------------------------------------------------------------------------------------------
+  # Example 1 : a simple command that overrides the existing spawn commands
+  #----------------------------------------------------------------------------------------------------
+  
+  spawn:
+    
+    # Aliases : the command can be used with /spawn or /gotospawn
+    aliases:
+      - spawn
+      - gotospawn
+    
+    # Arguments : here we don't need argument so we only add one pattern with empty args
+    arguments:
+  
+      1:
+        # Pattern : we don't need arguments, so it's empty
+        pattern: ''
+        # Description : arguments description ; what is that command going to do if you enter those arguments
+        description: go to the spawn
+        # Permission : the players will need to have the permission to use the command with those arguments
+        permission: myserver.permission.spawn
+        # Cooldown : we don't want the player to spam this command
+        cooldown: 15
+        # Perform : actions that will be performed when the player uses the command with those arguments
+        perform:
+          1:
+            type: teleport
+            data:
+              - player
+              - my_spawn_location
+          2:
+            type: send message
+            data:
+              - player
+              - '&aAlright {player}, you''re at spawn !'
+  
+  #----------------------------------------------------------------------------------------------------
+  # Example 2 : a command that shows informations about the server
+  #----------------------------------------------------------------------------------------------------
+  
+  helpserver:
+  
+    # Aliases : the command can be used with /helpserver
+    aliases:
+      - helpserver
+    
+    # Arguments
+    arguments:
+    
+      # First arguments : help about the PVP. The full command to type will be /helpserver pvp or /helpserver combat or /helpserver fight
+      1:
+        pattern: 'pvp|combat|fight'
+        description: get informations about the pvp
+        perform:
+          1:
+            type: send message
+            data:
+              - 'player'
+              - '&aThe PVP is active on our server, only in the dedicated PVP arena. You can join the battle with /pvp !'
+              - '&7Thanks for using the /helpserver command.'
+      
+      # Second arguments : help about the shop. The full command to type will be /helpserver shop or /helpserver store
+      2:
+        pattern: 'shop|store'
+        description: get informations about the shop
+        perform:
+          1:
+            type: send message
+            data:
+              - 'player'
+              - '&aWe have a shop available to sell ranks or some cosmetic advantages, so you can support the server and help us to grow. It''s located at www.our-website.com/shop'
+              - '&7Thanks for using the /helpserver command.'
+  
+      # ... etc. You can add infinite arguments.
+  
+  #----------------------------------------------------------------------------------------------------
+  # Example 3 : more complex command that uses more arguments and toggles.
+  #----------------------------------------------------------------------------------------------------
+  
+  complex:
+    
+    # Aliases : the command can be used with /complex
+    aliases:
+      - complex
+    
+    # Arguments
+    arguments:
+    
+      # First arguments : sending a message
+      # The full command to type will be /complex say [player] [message (multiple words)]
+      # The command will be displayed in help as /complex say [target player] [message]
+      1:
+        pattern: 'say [player-online]%target_player [phrase]%message'
+        description: 'send a message to a player'
+        perform:
+          1:
+            type: send message
+            data:
+              - '{arg:3}'
+              # we send him the arguments starting at argument 3 included
+              - '&d[from {player}]: &f{arg:3}'
+      
+      # Second arguments : sending a poke (single word phrase) to the player, and this word is optional. -->  (poke) is between () below because it's optional
+      # The full command to type will be /complex poke [player] (poke)
+      # The command will be displayed in help as /complex say [target player] (poke message)
+      2:
+        pattern: 'poke [player-online]%target_player [string]$defaultpoke%poke_message'
+        # not everyone can poke so let's use a permission
+        permission: myserver.permission.poke
+        description: 'poke a player'
+        perform:
+          1:
+            type: send message
+            data:
+              - '{arg:3}'
+              # we send him the poke ; if the sender entered no third argument, 'defaultpoke' will be sent
+              - '&d[poke from {player}]: &f{arg:3}'
+      
+      # Third arguments : just an example to show you how toggles work
+      # The full command to type will be /complex toggle test
+      # The command will be displayed in help as /complex toggle test
+      3:
+        pattern: 'toggle test'
+        permission: myserver.permission.toggletest
+        description: 'test the toggles'
+        
+        # If toggle=true, you'll have to specify perform_toggle_false= and perform_toggle_true= instead of only one perform=
+        toggle: true
+  
+        # Perform if toggle is currently false for the player when he typed the command
+        perform_toggle_false:
+          1:
+            type: send message
+            data:
+              - player
+              - '&fAnd now, the toggle has been toggled to &atrue &f!'
+              
+        # Perform if toggle is currently true for the player when he typed the command
+        perform_toggle_true:
+          1:
+            type: send message
+            data:
+              - player
+              - '&fAnd now, the toggle has been toggled to &cfalse &f!'
