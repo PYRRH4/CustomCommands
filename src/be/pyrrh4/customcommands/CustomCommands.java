@@ -218,8 +218,12 @@ public class CustomCommands extends PyrPlugin implements Listener {
 	// Events
 	// ------------------------------------------------------------
 
+	private long last = 0L;
+	
 	@EventHandler
 	public void event(PlayerCommandPreprocessEvent event) {
+		if (System.currentTimeMillis() - last < 5L) return;
+		last = System.currentTimeMillis();
 		Player sender = event.getPlayer();
 		Pair<String, String[]> separate = Utils.separateRoot(event.getMessage().substring(1), false);
 		String root = separate.getA();
