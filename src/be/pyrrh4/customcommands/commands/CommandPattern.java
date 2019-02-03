@@ -32,7 +32,7 @@ public class CommandPattern {
 	 */
 	public CommandPattern(String rawPattern, String description, String permission, boolean playerOnly) throws InvalidPatternError {
 		this.description = description;
-		this.permission = new Perm(null, permission);
+		this.permission = permission == null ? null : new Perm(null, permission);
 		this.playerOnly = playerOnly;
 		// empty arguments
 		// load

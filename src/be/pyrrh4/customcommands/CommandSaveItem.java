@@ -12,7 +12,7 @@ import be.pyrrh4.pyrcore.lib.util.Utils;
 
 public class CommandSaveItem extends CommandArgument {
 
-	private static final Param paramItem = new Param(Utils.asList("item"), "id", null, true);
+	private static final Param paramItem = new Param(Utils.asList("item", "i"), "id", null, true, true);
 
 	public CommandSaveItem() {
 		super(CustomCommands.inst(), null, Utils.asList("saveitem", "setitem"), "save an item", CCPerm.CUSTOMCOMMANDS_ADMIN, true, paramItem);

@@ -10,7 +10,7 @@ import be.pyrrh4.pyrcore.lib.util.Utils;
 
 public class CommandSaveLocation extends CommandArgument {
 
-	private static final Param paramLocation = new Param(Utils.asList("location"), "id", null, true);
+	private static final Param paramLocation = new Param(Utils.asList("location", "l"), "id", null, true, true);
 
 	public CommandSaveLocation() {
 		super(CustomCommands.inst(), null, Utils.asList("savelocation", "setlocation"), "save an location", CCPerm.CUSTOMCOMMANDS_ADMIN, true, paramLocation);
