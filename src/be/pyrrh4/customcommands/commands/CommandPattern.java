@@ -160,8 +160,8 @@ public class CommandPattern {
 			for (int argIndex = 0; argIndex < arguments.size(); argIndex++) {
 				Argument arg = arguments.get(argIndex);
 				String callArg = call.getArgAsString(this, argIndex);
-				// sender didn't enter this required argument
-				if (callArg == null) {
+				// sender didn't enter this required argument AND the argument isn't "[phrase]"
+				if (callArg == null && !(arg instanceof ArgumentModelPhrase)) {
 					callResult = Result.NONE;
 					break;
 				}

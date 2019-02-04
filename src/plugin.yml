@@ -4,7 +4,7 @@ description: 'The easiest, and most feature packed custom commands plugin !'
 author: PYRRH4
 website: www.pyrrh4.be
 # Techy
-version: 3.0.2-BETA
+version: 3.1.0
 api-version: 1.13
 main: be.pyrrh4.customcommands.CustomCommands
 depend: [PyrCore]
